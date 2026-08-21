@@ -1,0 +1,50 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 0 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.wordmark {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  color: var(--ink);
+}
+
+.brace {
+  color: var(--accent);
+}
+
+.text {
+  font-weight: bold;
+}
+
+.dot {
+  color: var(--accent-dim);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  color: var(--ink-dim);
+}
+
+.navLink:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.navBullet {
+  color: var(--ink-faint);
+  margin-right: 0.35rem;
+}

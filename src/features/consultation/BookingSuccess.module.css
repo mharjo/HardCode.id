@@ -1,0 +1,134 @@
+.card {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: var(--paper-raised);
+}
+
+.emoji {
+  font-size: 2.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+}
+
+.desc {
+  color: var(--ink-dim);
+  font-size: 0.9375rem;
+  max-width: 540px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.5;
+}
+
+.summaryList {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 0 auto 1.5rem;
+  max-width: 540px;
+  text-align: left;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.summaryLabel {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+
+.summaryVal {
+  font-weight: 600;
+  color: var(--ink);
+  text-align: right;
+}
+
+.meetLinkBox {
+  background: var(--paper);
+  border: 1px dashed var(--accent);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto 1.5rem;
+  max-width: 540px;
+  word-break: break-all;
+  gap: 0.5rem;
+}
+
+.copyBtn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  color: var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.copyBtn:hover {
+  border-color: var(--ink);
+}
+
+.actionsRow {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gcalBtn {
+  background: #2563eb;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.15s;
+}
+
+.gcalBtn:hover {
+  opacity: 0.9;
+}
+
+.resetBtn {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.resetBtn:hover {
+  border-color: var(--ink);
+  background: var(--paper-raised);
+}

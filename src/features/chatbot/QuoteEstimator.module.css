@@ -1,0 +1,385 @@
+.quote {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.1rem;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.heading {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.subtext {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+.configCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.secLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.catGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.catBtn {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-dim);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.catBtnActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.compGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.compBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 8px;
+  padding: 0.5rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-dim);
+  cursor: pointer;
+}
+
+.compBtnActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.compBadge {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--ink-faint);
+}
+
+.featGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.featChip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-dim);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.featChipActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.featChip:disabled {
+  cursor: default;
+}
+
+.checkIcon {
+  font-family: var(--font-mono);
+}
+
+.summaryCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.resultCard {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.9rem;
+  background: var(--paper-raised);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cardTypeTag {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.metricBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+}
+
+.metricLbl {
+  font-size: 0.625rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.metricVal {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.breakdownList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.breakdownItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  border-bottom: 1px dashed var(--line-soft);
+  padding-bottom: 0.35rem;
+}
+
+.itemName {
+  color: var(--ink);
+}
+
+.itemMeta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+}
+
+.itemMetaFaint {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btnPrimary {
+  border: none;
+  background: var(--accent);
+  color: var(--paper-raised);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btnRow {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.btnSecondary {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 0.5rem 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnIcon {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  cursor: pointer;
+}
+
+/* Print-only summary — hidden on screen, positioned to fill the printed page. */
+.printArea {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 720px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper-raised);
+}
+
+.printHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.printLogo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.printMeta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+.printTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin: 0 0 14px;
+}
+
+.printTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.printTable td,
+.printTable th {
+  border-bottom: 1px solid var(--line-soft);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.printTable td:first-child {
+  color: var(--ink-dim);
+  width: 40%;
+}
+
+.printFooter {
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+@media print {
+  :global(body *) {
+    visibility: hidden;
+  }
+
+  .printArea,
+  .printArea :global(*) {
+    visibility: visible;
+  }
+
+  .printArea {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .catGrid,
+  .featGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .compGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

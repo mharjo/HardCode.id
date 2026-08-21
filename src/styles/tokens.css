@@ -1,0 +1,34 @@
+/* Design tokens ported from SOURCE index.html :root / [data-theme="dark"] */
+:root {
+  --paper: #f7f4ee;
+  --paper-raised: #fffdf9;
+  --line: #e1d8c6;
+  --line-soft: #ece5d5;
+  --ink: #201c15;
+  --ink-dim: #6e6553;
+  --ink-faint: #a89b81;
+  --accent: #35406b;
+  --accent-dim: #6470a0;
+  --accent-soft: #eaecf5;
+
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --paper: #1a1815;
+  --paper-raised: #24221e;
+  --line: #38342d;
+  --line-soft: #2f2b25;
+  --ink: #e8e4db;
+  --ink-dim: #a89f91;
+  --ink-faint: #706a61;
+  --accent: #8496e3;
+  --accent-dim: #5665a3;
+  --accent-soft: #252838;
+
+  color-scheme: dark;
+}

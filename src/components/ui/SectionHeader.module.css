@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.25rem;
+}
+
+.index {
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.title {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background-color: var(--line);
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Belajar kode dan AI dengan cara yang masuk akal — bukan dihafal kaku. Sesi belajar privat, konsultasi gratis, dan project custom di hardcode.id."
+    />
+    <meta property="og:site_name" content="hardcode.id" />
+    <meta property="og:title" content="hardcode.id — Belajar kode dan AI" />
+    <meta
+      property="og:description"
+      content="Belajar kode dan AI dengan cara yang masuk akal — bukan dihafal kaku."
+    />
+    <meta property="og:type" content="website" />
+    <title>hardcode.id — Belajar kode dan AI</title>
+    <script>
+      // Runs before first paint so the correct theme applies immediately (no flash of the wrong theme).
+      (function () {
+        try {
+          var savedTheme = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme = savedTheme ? savedTheme : prefersDark ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

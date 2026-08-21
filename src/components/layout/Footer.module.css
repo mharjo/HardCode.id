@@ -1,0 +1,22 @@
+.footer {
+  padding: 3rem 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line-soft);
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo {
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+  font-size: 0.875rem;
+}
+
+.link {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--ink-dim);
+}

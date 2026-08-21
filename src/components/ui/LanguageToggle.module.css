@@ -1,0 +1,41 @@
+.button {
+  background: none;
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  color: var(--ink-dim);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+  line-height: 1;
+  user-select: none;
+}
+
+.button:hover {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  background: var(--accent-soft);
+}
+
+.option {
+  opacity: 0.45;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.optionActive {
+  opacity: 1;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.separator {
+  opacity: 0.3;
+  font-size: 0.6875rem;
+}

@@ -1,0 +1,274 @@
+.container {
+  margin: 2rem 0 3rem 0;
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-raised);
+}
+
+.top {
+  margin-bottom: 1.5rem;
+}
+
+.badgeTag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+}
+
+.desc {
+  color: var(--ink-dim);
+  max-width: 68ch;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+.trackFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.trackBtn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.trackBtn:hover {
+  color: var(--ink);
+  border-color: var(--accent-dim);
+}
+
+.trackBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.trackBtnActive {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.statItem {
+  white-space: nowrap;
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.stageRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.stageTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stageDot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.stageTitle {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.stageBadge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  white-space: nowrap;
+}
+
+.nodesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.nodeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.nodeCard:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-2px);
+}
+
+.nodeCard:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.nodeCardCapstone {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.nodeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nodeNumPill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink-dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+}
+
+.nodeTrackBadge {
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+
+.nodeTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.nodeSummary {
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.nodeTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.nodeTag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-dim);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+}
+
+.nodeFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--line-soft);
+}
+
+.nodeAction {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.connectorLine {
+  width: 1px;
+  height: 0.75rem;
+  background: var(--line);
+}
+
+.connectorIcon {
+  color: var(--accent-dim);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.hint {
+  margin: 1.5rem 0 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  text-align: center;
+}

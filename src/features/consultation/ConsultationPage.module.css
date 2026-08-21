@@ -1,0 +1,41 @@
+.page {
+  padding: 2.5rem 0 4rem 0;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.backLink:hover {
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+}
+
+.desc {
+  color: var(--ink-dim);
+  font-size: 1rem;
+  max-width: 62ch;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  box-shadow: 0 4px 28px -6px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}

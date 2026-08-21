@@ -1,0 +1,239 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line-soft);
+  padding: 2rem 1.75rem;
+  border-radius: 10px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px) scale(1.015);
+  border-color: var(--accent-dim);
+  box-shadow: 0 12px 32px -8px rgba(32, 28, 21, 0.12);
+}
+
+[data-theme="dark"] .card:hover {
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.15rem;
+}
+
+.icon {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  height: 2.6rem;
+  padding: 0 0.55rem;
+  border-radius: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.badgeDot {
+  font-size: 0.5rem;
+}
+
+.badgeFree {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+[data-theme="dark"] .badgeFree {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.badgePaid {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+}
+[data-theme="dark"] .badgePaid {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  color: var(--ink);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.card p {
+  color: var(--ink-dim);
+  font-size: 0.9375rem;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem 0;
+  flex-grow: 1;
+}
+
+.list li {
+  font-size: 0.875rem;
+  color: var(--ink-dim);
+  margin-bottom: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.list li::before {
+  content: "→";
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.action {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--accent);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-top: 0.75rem;
+}
+
+.subServices {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--line-soft);
+}
+
+.subServicesTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  display: block;
+  font-family: var(--font-mono);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags span {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+.ctaRow {
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  transition: background 0.2s, transform 0.1s;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.ctaNote {
+  color: var(--ink-dim);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+}
+
+.emptyState {
+  border: 1px dashed var(--line);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border-radius: 8px;
+  color: var(--ink-dim);
+  font-size: 0.9375rem;
+}
+
+.emptyState p {
+  margin: 0;
+}
