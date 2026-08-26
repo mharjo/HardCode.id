@@ -6,15 +6,16 @@ export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
   const { t } = useI18n();
   const isDark = theme === "dark";
+  const label = t(isDark ? "theme_toggle_to_light" : "theme_toggle_to_dark");
 
   return (
     <button
       type="button"
       className={styles.button}
       onClick={toggleTheme}
-      aria-label={t("theme_toggle_aria")}
+      aria-label={label}
       aria-pressed={isDark}
-      title={t("theme_toggle_aria")}
+      title={label}
     >
       {isDark ? (
         <svg

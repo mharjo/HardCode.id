@@ -10,7 +10,7 @@ completion log" at the bottom of this file. Chatbot widget + quote estimator COM
 
 ## Current state
 
-Source repo: `D:\AISTUDIO\SOURCE\HardCode.id` (read-only — never write here)
+Source repo: `D:\AISTUDIO\SOURCE\react-hardcode-id` (read-only — never write here)
 Target output: `D:\AISTUDIO\OUTPUT\HardCode.id`
 Current live site: `https://hardcode.id/`
 Current hosting: Cloudflare Pages
@@ -63,7 +63,7 @@ markup, styling, and logic concentrated in one 389 KB `index.html`, plus two
 large global-script data/logic files:
 
 ```text
-D:\AISTUDIO\SOURCE\HardCode.id\
+D:\AISTUDIO\SOURCE\react-hardcode-id\
   .env.example              454 B   (GEMINI_API_KEY, APP_URL placeholders — unused)
   .gitignore                 81 B
   metadata.json              275 B  (AI Studio metadata; claims MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API — aspirational, unused)
@@ -501,7 +501,7 @@ set as a Pages **secret** (not a plain env var) stays server-side.
 
 ## Open decisions
 
-1. Is SOURCE (`D:\AISTUDIO\SOURCE\HardCode.id`) actually the intended next
+1. Is SOURCE (`D:\AISTUDIO\SOURCE\react-hardcode-id`) actually the intended next
    version of the live site, or an experiment? Confirms/changes the entire
    feature inventory above.
 2. Chatbot: keep as clearly-labeled client-side simulation (fast, zero
@@ -1930,3 +1930,218 @@ src/components/layout/AppShell.tsx        (skip-to-main-content link)
 - Lighthouse pass (requires manual browser run with Chrome DevTools or
   
 px lighthouse-cli). All other Phase 4 items complete.
+
+---
+
+### Header/nav, back-to-top, scroll, chatbot, quote estimator, theme/language toggle audit — 2026-08-26
+
+Targeted re-audit of six areas against SOURCE, prompted by an in-progress
+uncommitted `BackToTop` component found sitting in the working tree at the
+start of this step (added in an earlier, undocumented edit — not part of any
+prior completion log above). Findings below are grouped by area with an
+Identical / Differs / Missing verdict, followed by which of the found gaps
+were actually patched (kept intentionally minimal — see "Patches applied").
+
+#### Header / nav
+
+- **Identical**: no sticky header or scroll-shadow effect exists in SOURCE
+  (`<header>` is a static flex row with only a `border-bottom`), so OUTPUT's
+  equally-static `Header.tsx`/`Header.module.css` is correct parity, not a
+  gap. No `IntersectionObserver`/scroll-based active-link highlighting exists
+  in SOURCE either — OUTPUT correctly has none. No mobile hamburger/menu-
+  toggle exists in SOURCE (nav items just wrap at `max-width: 600px`) —
+  OUTPUT's `flex-wrap` nav is equivalent. Language toggle markup, ARIA
+  label text, and ID/EN pill structure match SOURCE's `#lang-toggle`
+  exactly.
+- **Differs**: OUTPUT's header nav includes `/belajar`, `/proyek`, and
+  `/konsultasi` links that don't exist in SOURCE's `<nav>` at all — SOURCE
+  only reaches those three views via homepage service-card clicks
+  (`onclick="navigate('view-consultation'|'view-project'|'view-learning')"`
+  at `index.html:6173/6199/6225`), never from the header. This was a
+  deliberate addition from an earlier migration phase (once those routes
+  existed, it made sense to surface them in nav) — documented here as an
+  intentional parity deviation, not a bug, and left as-is.
+- **Fixed this step**: theme toggle's `aria-label`/`title` were a single
+  static string (`theme_toggle_aria`, "Toggle dark mode"/"Ganti mode
+  gelap/terang") regardless of current theme. SOURCE's `updateThemeIcons`
+  sets a **target-state** label — "Switch to dark mode" while light, "Switch
+  to light mode" while dark (`index.html:7766-7776`). Replaced with two new
+  keys (`theme_toggle_to_dark`/`theme_toggle_to_light`) selected by current
+  `theme` state.
+- **Fixed this step**: `ThemeContext` wrote to `localStorage` on *every*
+  theme change, including the initial mount value derived from
+  `prefers-color-scheme` — meaning a visitor who never touched the toggle
+  would still have a theme "locked in," diverging from a future OS-level
+  preference change. SOURCE only persists on an explicit `toggleTheme()`
+  click (`applyTheme(theme, persist=true)` vs. the OS-listener's
+  `persist=false` at `index.html:7781-7816`). `ThemeContext.tsx` now only
+  calls `writeStoredValue` from inside `toggleTheme`, and a new
+  `matchMedia("(prefers-color-scheme: dark)")` change listener updates
+  `theme` (without persisting) whenever no explicit preference is stored —
+  matching SOURCE's `change` handler exactly.
+- **Fixed this step**: language preference persists to `localStorage` under
+  a different key than the live site uses — OUTPUT used `lang`, SOURCE (and
+  therefore the current production `hardcode.id`, since SOURCE is the
+  intended next version) uses `hardcode_lang` (`src/i18n.js:755,778`).
+  Renamed `I18nContext`'s `STORAGE_KEY` to `hardcode_lang` so a returning
+  visitor's previously-saved language choice carries over after this
+  migration ships, instead of silently resetting to browser-language
+  detection.
+
+#### Back-to-top button / scroll behavior
+
+Found as an uncommitted, apparently mid-work component (`BackToTop.tsx` +
+`.module.css`, referenced from `AppShell.tsx`) already sitting in the working
+tree before this audit began — treated as in-progress work to finish/correct,
+not something to revert.
+
+- **Differs (fixed)**: scroll-reveal threshold was `window.scrollY > 400`;
+  SOURCE's `checkScrollPosition` uses `> 260` (`index.html:8644-8655`).
+  Corrected to `260`.
+- **Differs (fixed)**: icon was a plain `↑` text glyph; SOURCE uses an inline
+  chevron SVG (`index.html:7439-7441`). Replaced with the same SVG markup.
+- **Differs (fixed)**: `aria-label`/`title` were hardcoded to the Indonesian
+  string `"Kembali ke atas"` regardless of active language. SOURCE tags this
+  with `data-i18n-aria="top_aria"`, which resolves to "Back to top" in EN
+  (`src/i18n.js:336,706`). Added a `top_aria` translation key and switched
+  the button to `useI18n()`.
+- **Differs (fixed)**: visibility was implemented by unmounting the button
+  (`if (!visible) return null`), losing any fade transition on hide/show and
+  making it briefly untabbable-then-gone rather than smoothly faded. SOURCE
+  always renders the button and toggles a `.visible` class for an
+  opacity/transform transition (`index.html:2622-2649`). OUTPUT now always
+  renders the button, toggles a `styles.visible` class the same way, and
+  sets `tabIndex={-1}` while hidden so it isn't keyboard-focusable when
+  invisible (SOURCE has no keyboard-focus guard here; this is a small
+  accessibility improvement, not a parity break).
+- **Differs (fixed)**: no mobile-breakpoint override existed; SOURCE shrinks
+  the button (2.5rem → 2.25rem) and repositions it (bottom 5.75rem → 5rem,
+  right 1.5rem → 0.75rem) under `max-width: 600px`
+  (`index.html:4414,4614-4619`). Added the matching `@media (max-width:
+  600px)` block to `BackToTop.module.css`.
+- **Fixed pre-existing bug, unrelated to back-to-top itself**: the
+  uncommitted `AppShell.tsx` had picked up a UTF-8 BOM (`EF BB BF`) as its
+  first three bytes — the exact class of bug documented and fixed once
+  already in the "Phase 1 scaffold completion" log above. Rewrote the file
+  without the BOM.
+- **No other scroll behavior gaps found.** Reading-progress bar (articles)
+  and calendar keyboard scroll behavior were already covered by earlier
+  phases and were not touched here.
+
+#### Chatbot ("Tanya") — audited, not patched (see rationale)
+
+Deeper areas checked via a background read-only audit against
+`chatResponses.ts`, `ChatContext.tsx`, `ChatConversation.tsx`,
+`ChatWidget.tsx`, `quoteConfig.ts`:
+
+- **Identical / already correct**: quota UI is already fully built out —
+  5 progress segments, `warning`/`danger`/`depleted` status classes, input
+  and send button disabled with a swapped placeholder once quota hits 0
+  (`ChatConversation.tsx:90-124,192-215`) — the audit's initial uncertainty
+  about this was resolved by direct inspection; no gap exists here. Quote
+  category auto-select from a chat message (keyword match before showing an
+  inline estimate) matches SOURCE's behavior.
+- **Missing (documented, not built)**: SOURCE persists chat panel
+  size/custom drag-resized dimensions to `localStorage`
+  (`hardcode_tanya_size_mode`, `hardcode_tanya_custom_w/h`) and supports a
+  manual resize handle (`index.html:9749-9855`); OUTPUT's panel size is
+  plain, non-persisted React state with no drag-resize. SOURCE shows an
+  unread-message dot on the trigger button (`#tanya-unread-dot`); OUTPUT has
+  none. SOURCE's message renderer (`parseTanyaMessage`, ~150 lines) supports
+  emoji shortcodes, emoticon conversion, fenced/inline code, blockquotes,
+  lists, and markdown links; OUTPUT's `parseMarkdownLiteLine` only handles
+  `**bold**` and `` `code` `` spans. SOURCE's canned replies embed literal
+  `<button onclick=...>` CTAs inline in the message text; OUTPUT models the
+  same CTAs as structured `actions[]` rendered separately (functionally
+  equivalent, differs in literal reply text).
+- **Not patched this step, by design**: these are feature-scope gaps (rich
+  text rendering, drag-resize + its persistence, an unread-dot indicator),
+  not defects in already-migrated behavior, and each is a nontrivial,
+  independently-scoped chunk of work — patching any of them "minimally"
+  alongside a toggle/scroll-behavior audit would be scope creep past what
+  was asked. Left as explicit open gaps for a future, separately-scoped
+  chatbot-parity pass.
+
+#### Quote estimator — audited, not patched (see rationale)
+
+- **Identical / already correct**: pricing tables, complexity multipliers,
+  day-modifiers, and feature costs (`calculateQuote`/`calculateTanyaQuote`)
+  were verified byte-for-byte equivalent to SOURCE's arithmetic
+  (`index.html:8828-8894` vs. `quoteConfig.ts:334-379`), including
+  SOURCE's pre-existing "`comp.mult` computed but never applied" quirk,
+  which was carried over faithfully rather than silently "fixed" (changing
+  historical pricing arithmetic without being asked is out of scope for an
+  audit step).
+- **Differs, not patched**: SOURCE builds a fully custom printable HTML
+  document (`generatePrintableQuoteHtml`) and prints via a hidden iframe
+  with a popup-window fallback, plus a "preparing PDF" toast
+  (`index.html:9603-9652`); OUTPUT calls `window.print()` directly against
+  an `@media print`-only DOM subtree (`QuoteEstimator.tsx:56-58,204-250`) —
+  no custom print document, no toast, no popup fallback. Functionally both
+  produce a printable estimate; the difference is presentation/robustness
+  (e.g. OUTPUT's approach also prints anything else `@media print` exposes
+  on the page, whereas SOURCE's iframe is fully isolated). Left unpatched —
+  same reasoning as the chatbot gaps above: a real fix means either
+  reimplementing the iframe/toast pattern or deciding `window.print()` is an
+  acceptable, simpler alternative, which is a product decision, not a
+  same-day audit patch.
+
+#### Patches applied this step (files changed)
+
+```text
+src/data/translations.ts        — added theme_toggle_to_dark/_to_light,
+                                   top_aria keys (ID+EN); removed the now-
+                                   unused theme_toggle_aria key
+src/components/ui/ThemeToggle.tsx — dynamic target-state aria-label/title
+src/theme/ThemeContext.tsx      — persist only on explicit toggle; added
+                                   OS prefers-color-scheme change listener
+                                   (no-op once a preference is stored)
+src/i18n/I18nContext.tsx        — STORAGE_KEY "lang" -> "hardcode_lang"
+src/components/ui/BackToTop.tsx — 260px threshold, chevron SVG, i18n label,
+                                   always-mounted + CSS-class visibility
+                                   toggle, tabIndex guard
+src/components/ui/BackToTop.module.css — restored fade/scale transition +
+                                   mobile breakpoint override
+src/components/layout/AppShell.tsx — stripped a UTF-8 BOM picked up by an
+                                   earlier uncommitted edit (already wired
+                                   BackToTop into the shell; no logic change)
+```
+
+No SOURCE file was modified (read-only, per project policy). No new
+dependency was added.
+
+#### Validation gates — all passing (Node/npm as configured in this repo)
+
+```text
+npm run lint      -> 0 errors, 3 warnings (pre-existing
+                      react-refresh/only-export-components on
+                      ChatContext.tsx/I18nContext.tsx/ThemeContext.tsx,
+                      same pre-existing pattern noted in every prior log
+                      in this file; exit code 0)
+npx tsc --noEmit  -> clean
+npm run test      -> 9 files, 90 tests passed
+npm run build     -> vite build succeeded:
+                      dist/index.html          1.59 kB (gzip 0.69 kB)
+                      dist/assets/*.css       70.73 kB (gzip 12.66 kB)
+                      dist/assets/*.js       443.03 kB (gzip 143.05 kB)
+```
+
+`dist/` removed after the build check (build artifact, already
+`.gitignore`d), consistent with every prior phase in this log.
+
+#### Remaining known gaps after this step
+
+- Chatbot: no drag-resize/persisted panel size, no unread-message dot, and a
+  simplified markdown-lite renderer versus SOURCE's fuller
+  emoji/list/blockquote/link support (see "Chatbot — audited, not patched"
+  above).
+- Quote estimator: `window.print()` on an `@media print` subtree instead of
+  SOURCE's isolated hidden-iframe/popup-fallback printable document and
+  "preparing PDF" toast (see "Quote estimator — audited, not patched"
+  above).
+- Header nav intentionally includes 3 links (`/belajar`, `/proyek`,
+  `/konsultasi`) SOURCE's header never had — flagged for awareness, not
+  scheduled for removal.
+- None of the above block a production launch on their own; each is a
+  presentation/nice-to-have gap versus a functional regression, and each is
+  now explicitly tracked here instead of being an undocumented silent gap.

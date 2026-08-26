@@ -10,7 +10,7 @@ import {
 import { translations, type Locale, type TranslationKey } from "../data/translations";
 import { readStoredValue, writeStoredValue } from "../lib/storage";
 
-const STORAGE_KEY = "lang";
+const STORAGE_KEY = "hardcode_lang";
 
 interface I18nContextValue {
   locale: Locale;

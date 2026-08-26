@@ -17,8 +17,10 @@ const id = {
   nav_testimoni: "testimoni",
   nav_tulisan: "tulisan",
   skip_to_content: "Langsung ke konten utama",
-  theme_toggle_aria: "Ganti mode gelap/terang",
+  theme_toggle_to_dark: "Ganti ke mode gelap",
+  theme_toggle_to_light: "Ganti ke mode terang",
   lang_toggle_aria: "Ganti Bahasa / Switch Language",
+  top_aria: "Kembali ke atas",
 
   hero_pill: "terbuka untuk klien baru",
   hero_title_main: "HardCode.",
@@ -533,8 +535,10 @@ const en: Record<keyof typeof id, string> = {
   nav_testimoni: "testimonials",
   nav_tulisan: "articles",
   skip_to_content: "Skip to main content",
-  theme_toggle_aria: "Toggle dark mode",
+  theme_toggle_to_dark: "Switch to dark mode",
+  theme_toggle_to_light: "Switch to light mode",
   lang_toggle_aria: "Ganti Bahasa / Switch Language",
+  top_aria: "Back to top",
 
   hero_pill: "open for new clients",
   hero_title_main: "HardCode.",

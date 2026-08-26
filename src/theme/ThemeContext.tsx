@@ -34,11 +34,28 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
-    writeStoredValue(STORAGE_KEY, theme);
   }, [theme]);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    function handleChange(event: MediaQueryListEvent) {
+      // Only follow the OS preference while the user hasn't explicitly
+      // chosen a theme via the toggle — matches SOURCE's `persist=false`
+      // OS-change handler, which never overrides an explicit choice.
+      if (readStoredValue(STORAGE_KEY)) return;
+      setTheme(event.matches ? "dark" : "light");
+    }
+    media.addEventListener("change", handleChange);
+    return () => media.removeEventListener("change", handleChange);
+  }, []);
+
   const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === "light" ? "dark" : "light"));
+    setTheme((current) => {
+      const next = current === "light" ? "dark" : "light";
+      writeStoredValue(STORAGE_KEY, next);
+      return next;
+    });
   }, []);
 
   const value = useMemo<ThemeContextValue>(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
