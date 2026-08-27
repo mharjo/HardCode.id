@@ -1,4 +1,5 @@
-.quote {
+﻿.quote {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -290,86 +291,30 @@
   cursor: pointer;
 }
 
-/* Print-only summary — hidden on screen, positioned to fill the printed page. */
-.printArea {
+.printToast {
   position: absolute;
-  left: -9999px;
-  top: -9999px;
-  width: 720px;
-  font-family: var(--font-body);
-  color: var(--ink);
-  background: var(--paper-raised);
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeUp 0.3s ease-out;
 }
 
-.printHeader {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  border-bottom: 2px solid var(--line);
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-}
-
-.printLogo {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.printMeta {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--ink-dim);
-}
-
-.printTitle {
-  font-family: var(--font-display);
-  font-size: 20px;
-  margin: 0 0 14px;
-}
-
-.printTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-  font-size: 12px;
-}
-
-.printTable td,
-.printTable th {
-  border-bottom: 1px solid var(--line-soft);
-  padding: 6px 8px;
-  text-align: left;
-}
-
-.printTable td:first-child {
-  color: var(--ink-dim);
-  width: 40%;
-}
-
-.printFooter {
-  font-size: 10.5px;
-  color: var(--ink-faint);
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
-}
-
-@media print {
-  :global(body *) {
-    visibility: hidden;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
   }
-
-  .printArea,
-  .printArea :global(*) {
-    visibility: visible;
-  }
-
-  .printArea {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    padding: 16px;
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }
 

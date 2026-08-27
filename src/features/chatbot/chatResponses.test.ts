@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { getBotResponse, parseMarkdownLiteLine } from "./chatResponses";
+﻿import { describe, expect, it } from "vitest";
+import { getBotResponse, parseTanyaMessage, parseInline } from "./chatResponses";
 import { DEFAULT_QUOTE_STATE } from "./quoteConfig";
 
 describe("getBotResponse (Indonesian, free text)", () => {
@@ -71,18 +71,45 @@ describe("getBotResponse (quick prompts)", () => {
   });
 });
 
-describe("parseMarkdownLiteLine", () => {
-  it("splits bold and code spans out of plain text", () => {
-    const segments = parseMarkdownLiteLine("Timeline: **2 - 4 Hari** at `20:00 WIB`");
-    expect(segments).toEqual([
-      { type: "text", value: "Timeline: " },
-      { type: "bold", value: "2 - 4 Hari" },
-      { type: "text", value: " at " },
-      { type: "code", value: "20:00 WIB" },
-    ]);
+describe("parseTanyaMessage & parseInline", () => {
+  it("parses blockquotes, lists, code blocks, dividers, paragraphs", () => {
+    const text = `> quote
+---
+- item 1
+- item 2
+\`\`\`js
+console.log()
+\`\`\`
+paragraph`;
+
+    const nodes = parseTanyaMessage(text);
+
+    expect(nodes.length).toBe(5);
+    expect(nodes[0]!.type).toBe("blockquote");
+    expect(nodes[1]!.type).toBe("divider");
+    expect(nodes[2]!.type).toBe("list-ul");
+    expect(nodes[3]!.type).toBe("fenced-code");
+    expect(nodes[4]!.type).toBe("paragraph");
   });
 
-  it("returns a single text segment when there's no markdown", () => {
-    expect(parseMarkdownLiteLine("plain text")).toEqual([{ type: "text", value: "plain text" }]);
+  it("parses inline styles (bold, italic, code, emoji, links)", () => {
+    const nodes = parseInline("Hello **bold** and _italic_ and `code` :) [link](url)");
+
+    expect(nodes).toEqual(expect.arrayContaining([
+      expect.objectContaining({ type: "text", value: "Hello " }),
+      expect.objectContaining({ type: "bold", children: [{ type: "text", value: "bold" }] }),
+      expect.objectContaining({ type: "text", value: " and " }),
+      expect.objectContaining({ type: "italic", children: [{ type: "text", value: "italic" }] }),
+      expect.objectContaining({ type: "text", value: " and " }),
+      expect.objectContaining({ type: "code", value: "code" }),
+      expect.objectContaining({ type: "text", value: " " }),
+      expect.objectContaining({ type: "emoji", value: "😊" }),
+      expect.objectContaining({ type: "text", value: " " }),
+      expect.objectContaining({ type: "link", url: "url", children: [{ type: "text", value: "link" }] })
+    ]));
+  });
+
+  it("returns a text segment when there's no markdown", () => {
+    expect(parseInline("plain text")).toEqual([{ type: "text", value: "plain text" }]);
   });
 });

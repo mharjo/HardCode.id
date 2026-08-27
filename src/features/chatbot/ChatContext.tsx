@@ -1,7 +1,8 @@
-import {
+﻿import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type Dispatch,
@@ -23,7 +24,14 @@ import {
 
 export type ChatMode = "chat" | "quote";
 export type ChatSize = "normal" | "wide" | "fullpage";
+export type ChatSizeMode = "default" | "large" | "compact" | "custom";
 export type MessageRole = "bot" | "user" | "system";
+
+const CHAT_SIZE_MODES = ["default", "large", "compact", "custom"] as const satisfies readonly ChatSizeMode[];
+const CUSTOM_WIDTH_MIN = 320;
+const CUSTOM_WIDTH_MAX = 900;
+const CUSTOM_HEIGHT_MIN = 360;
+const CUSTOM_HEIGHT_MAX = 800;
 
 export interface ChatMessage {
   id: string;
@@ -50,10 +58,26 @@ function makeId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+function parseStoredNumber(value: string | null, fallback: number, min: number, max: number): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? clampNumber(parsed, min, max) : fallback;
+}
+
+function parseStoredSizeMode(value: string | null): ChatSizeMode {
+  return CHAT_SIZE_MODES.includes(value as ChatSizeMode) ? (value as ChatSizeMode) : "default";
+}
+
 interface ChatContextValue {
   isOpen: boolean;
   mode: ChatMode;
   size: ChatSize;
+  sizeMode: ChatSizeMode;
+  customW: number;
+  customH: number;
   gatePassed: boolean;
   contact: string;
   selectedTopic: string;
@@ -64,12 +88,16 @@ interface ChatContextValue {
   isQuoteVisited: boolean;
   quoteBannerDismissed: boolean;
   quote: QuoteState;
+  hasUnread: boolean;
 
   openWidget: () => void;
   closeWidget: () => void;
   toggleWidget: () => void;
   switchMode: (mode: ChatMode) => void;
   setSize: Dispatch<SetStateAction<ChatSize>>;
+  setCustomW: Dispatch<SetStateAction<number>>;
+  setCustomH: Dispatch<SetStateAction<number>>;
+  setSizeMode: Dispatch<SetStateAction<ChatSizeMode>>;
   setSelectedTopic: (topic: string) => void;
   submitGate: (contact: string) => void;
   sendMessage: (text: string) => void;
@@ -91,6 +119,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
   const [mode, setMode] = useState<ChatMode>("chat");
   const [size, setSize] = useState<ChatSize>("normal");
   const [gatePassed, setGatePassed] = useState(false);
@@ -102,10 +131,51 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [isQuoteVisited, setIsQuoteVisited] = useState(false);
   const [quoteBannerDismissed, setQuoteBannerDismissed] = useState(false);
   const [quote, setQuote] = useState<QuoteState>(DEFAULT_QUOTE_STATE);
+  const [sizeMode, setSizeMode] = useState<ChatSizeMode>(() => {
+    try {
+      return parseStoredSizeMode(localStorage.getItem("hardcode_tanya_size_mode"));
+    } catch {
+      return "default";
+    }
+  });
+  const [customW, setCustomW] = useState(() => {
+    try {
+      return parseStoredNumber(localStorage.getItem("hardcode_tanya_custom_w"), 420, CUSTOM_WIDTH_MIN, CUSTOM_WIDTH_MAX);
+    } catch {
+      return 420;
+    }
+  });
+  const [customH, setCustomH] = useState(() => {
+    try {
+      return parseStoredNumber(localStorage.getItem("hardcode_tanya_custom_h"), 500, CUSTOM_HEIGHT_MIN, CUSTOM_HEIGHT_MAX);
+    } catch {
+      return 500;
+    }
+  });
 
-  const openWidget = useCallback(() => setIsOpen(true), []);
+  useEffect(() => {
+    try {
+      localStorage.setItem("hardcode_tanya_size_mode", sizeMode);
+      localStorage.setItem("hardcode_tanya_custom_w", String(customW));
+      localStorage.setItem("hardcode_tanya_custom_h", String(customH));
+    } catch {
+      // localStorage can be unavailable in restricted browser contexts.
+    }
+  }, [customH, customW, sizeMode]);
+
+  const openWidget = useCallback(() => {
+    setIsOpen(true);
+    setHasUnread(false);
+  }, []);
+
   const closeWidget = useCallback(() => setIsOpen(false), []);
-  const toggleWidget = useCallback(() => setIsOpen((open) => !open), []);
+
+  const toggleWidget = useCallback(() => {
+    setIsOpen((open) => {
+      if (!open) setHasUnread(false);
+      return !open;
+    });
+  }, []);
 
   const switchMode = useCallback((next: ChatMode) => {
     setMode(next);
@@ -114,6 +184,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const appendMessage = useCallback((role: MessageRole, text: string, actions?: import("./chatResponses").BotAction[]) => {
     setMessages((current) => [...current, { id: makeId(), role, text, time: nowTime(), ...(actions ? { actions } : {}) }]);
+    if (role === "bot") {
+      setIsOpen((open) => {
+        if (!open) setHasUnread(true);
+        return open;
+      });
+    }
   }, []);
 
   const replyTo = useCallback(
@@ -252,6 +328,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isOpen,
       mode,
       size,
+      customW,
+      customH,
+      sizeMode,
       gatePassed,
       contact,
       selectedTopic,
@@ -262,6 +341,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isQuoteVisited,
       quoteBannerDismissed,
       quote,
+      hasUnread,
       openWidget,
       closeWidget,
       toggleWidget,
@@ -278,11 +358,17 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       resetQuote,
       applyQuoteToConsultation,
       sendQuoteToChat,
+      setCustomW,
+      setCustomH,
+      setSizeMode,
     }),
     [
       isOpen,
       mode,
       size,
+      customW,
+      customH,
+      sizeMode,
       gatePassed,
       contact,
       selectedTopic,
@@ -292,6 +378,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isQuoteVisited,
       quoteBannerDismissed,
       quote,
+      hasUnread,
       openWidget,
       closeWidget,
       toggleWidget,

@@ -1,4 +1,4 @@
-import type { Locale } from "../../data/translations";
+import type { Locale, TranslationKey } from "../../data/translations";
 
 /**
  * Pure quote-estimator pricing data & calculator, ported verbatim from
@@ -410,4 +410,82 @@ export function generateQuoteSummaryText(state: QuoteState, lang: Locale, now: D
 
 export function toggleQuoteFeature(features: QuoteFeatureId[], featKey: QuoteFeatureId): QuoteFeatureId[] {
   return features.includes(featKey) ? features.filter((f) => f !== featKey) : [...features, featKey];
+}
+
+export function generatePrintableQuoteHtml(calc: QuoteCalculation, lang: Locale, t: (key: TranslationKey) => string, now: Date = new Date()): string {
+  const printDateStr = now.toLocaleDateString(lang === "en" ? "en-US" : "id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const catName = lang === "en" ? calc.cat.nameEn : calc.cat.nameId;
+  const compLabel = lang === "en" ? calc.comp.labelEn : calc.comp.labelId;
+
+  const featuresRows = calc.features
+    .map((feat) => {
+      const featName = lang === "en" ? feat.nameEn : feat.nameId;
+      const featMeta = feat.id === "warranty" ? t("quote_included") : `+${feat.extraDays}d`;
+      return `<tr><td>${featName}</td><td>${featMeta}</td></tr>`;
+    })
+    .join("\n            ");
+
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+  <meta charset="utf-8">
+  <title>${t("quote_print_summary_title")}</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; padding: 2rem; max-width: 800px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #eaeaea; padding-bottom: 12px; margin-bottom: 16px; }
+    .logo { font-family: monospace; font-weight: 700; font-size: 16px; }
+    .meta { font-family: monospace; font-size: 11px; color: #666; }
+    h1 { font-size: 20px; margin: 0 0 14px 0; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eaeaea; }
+    td:first-child, th:first-child { width: 40%; color: #666; }
+    th { font-weight: 700; }
+    .footer { font-size: 10.5px; color: #888; border-top: 1px solid #eaeaea; padding-top: 10px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">{tanya} &middot; hardcode.id</div>
+    <div class="meta">${printDateStr}</div>
+  </div>
+  <h1>${t("quote_print_summary_title")}</h1>
+  <table>
+    <tbody>
+      <tr>
+        <td>${t("quote_type_label")}</td>
+        <td>${calc.cat.icon} ${catName}</td>
+      </tr>
+      <tr>
+        <td>${t("quote_complexity_label")}</td>
+        <td>${compLabel}</td>
+      </tr>
+      <tr>
+        <td>${t("quote_est_timeline")}</td>
+        <td>${calc.timelineText}</td>
+      </tr>
+      <tr>
+        <td>${t("quote_est_investment")}</td>
+        <td>${calc.priceText}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th>${t("quote_features_label")}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      ${featuresRows}
+    </tbody>
+  </table>
+  <p class="footer">${t("quote_print_footer")}</p>
+</body>
+</html>`;
 }

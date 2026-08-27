@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { useI18n } from "../../i18n/I18nContext";
 import { LanguageToggle } from "../ui/LanguageToggle";
 import { ThemeToggle } from "../ui/ThemeToggle";
@@ -40,24 +40,6 @@ export function Header() {
             ·
           </span>
           {t("nav_tulisan")}
-        </Link>
-        <Link to="/belajar" className={styles.navLink}>
-          <span className={styles.navBullet} aria-hidden="true">
-            ·
-          </span>
-          {t("nav_belajar")}
-        </Link>
-        <Link to="/proyek" className={styles.navLink}>
-          <span className={styles.navBullet} aria-hidden="true">
-            ·
-          </span>
-          {t("nav_proyek")}
-        </Link>
-        <Link to="/konsultasi" className={styles.navLink}>
-          <span className={styles.navBullet} aria-hidden="true">
-            ·
-          </span>
-          {t("nav_konsultasi")}
         </Link>
         <LanguageToggle />
         <ThemeToggle />

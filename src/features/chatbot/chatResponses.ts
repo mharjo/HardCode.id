@@ -187,33 +187,163 @@ export function getBotResponse(
   return defaultResponse(lang);
 }
 
-export interface MarkdownSegment {
-  type: "text" | "bold" | "code";
-  value: string;
-}
+export type MarkdownNode =
+  | { type: "text"; value: string }
+  | { type: "bold"; children: MarkdownNode[] }
+  | { type: "italic"; children: MarkdownNode[] }
+  | { type: "code"; value: string }
+  | { type: "emoji"; value: string }
+  | { type: "link"; url: string; children: MarkdownNode[] }
+  | { type: "paragraph"; children: MarkdownNode[] }
+  | { type: "blockquote"; children: MarkdownNode[] }
+  | { type: "fenced-code"; value: string; language: string }
+  | { type: "list-ul"; items: MarkdownNode[][] }
+  | { type: "list-ol"; items: MarkdownNode[][] }
+  | { type: "divider" };
 
-/** Splits `**bold**` and `` `code` `` spans out of a line of markdown-lite text, preserving order. Used by `ChatConversation` to render bot replies without `dangerouslySetInnerHTML`. */
-export function parseMarkdownLiteLine(line: string): MarkdownSegment[] {
-  const segments: MarkdownSegment[] = [];
-  const pattern = /\*\*(.+?)\*\*|`(.+?)`/g;
+const EMOJI_MAP: Record<string, string> = {
+  ":smile:": "😊",
+  ":)": "😊",
+  ":(": "😢",
+  ":D": "😃",
+  ";)": "😉",
+  ":wink:": "😉",
+  ":thumbsup:": "👍",
+  ":sparkles:": "✨",
+  ":rocket:": "🚀",
+  ":tada:": "🎉",
+  ":fire:": "🔥",
+  ":100:": "💯",
+  ":gear:": "⚙️",
+  ":calendar:": "📅",
+  ":bar_chart:": "📊",
+  ":envelope:": "✉️",
+  ":wave:": "👋",
+  ":bulb:": "💡",
+  ":hammer_and_wrench:": "🛠️"
+};
+
+export function parseInline(text: string): MarkdownNode[] {
+  const tokens: MarkdownNode[] = [];
+  const regex = /(\[([^\]]+)\]\(([^)]+)\))|(\*\*([\s\S]+?)\*\*)|(_([\s\S]+?)_)|(\*([\s\S]+?)\*)|(`([^`]+)`)|(:\)|:\(|:D|;\)|:[a-z_]+:)/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
-  while ((match = pattern.exec(line)) !== null) {
+  while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) {
-      segments.push({ type: "text", value: line.slice(lastIndex, match.index) });
+      tokens.push({ type: "text", value: text.slice(lastIndex, match.index) });
     }
-    if (match[1] !== undefined) {
-      segments.push({ type: "bold", value: match[1] });
-    } else if (match[2] !== undefined) {
-      segments.push({ type: "code", value: match[2] });
+
+    if (match[1]) {
+      tokens.push({ type: "link", children: parseInline(match[2]!), url: match[3]! });
+    } else if (match[4]) {
+      tokens.push({ type: "bold", children: parseInline(match[5]!) });
+    } else if (match[6]) {
+      tokens.push({ type: "italic", children: parseInline(match[7]!) });
+    } else if (match[8]) {
+      tokens.push({ type: "italic", children: parseInline(match[9]!) });
+    } else if (match[10]) {
+      tokens.push({ type: "code", value: match[11]! });
+    } else if (match[12]) {
+      const e = match[12]!;
+      tokens.push({ type: "emoji", value: EMOJI_MAP[e] || e });
     }
-    lastIndex = pattern.lastIndex;
+
+    lastIndex = regex.lastIndex;
   }
 
-  if (lastIndex < line.length) {
-    segments.push({ type: "text", value: line.slice(lastIndex) });
+  if (lastIndex < text.length) {
+    tokens.push({ type: "text", value: text.slice(lastIndex) });
   }
 
-  return segments;
+  return tokens;
+}
+
+export function parseTanyaMessage(text: string): MarkdownNode[] {
+  const lines = text.split(/\r?\n/);
+  const blocks: MarkdownNode[] = [];
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i]!;
+
+    // Divider
+    if (/^---+\s*$/.test(line)) {
+      blocks.push({ type: "divider" });
+      i++;
+      continue;
+    }
+
+    // Fenced code
+    const fencedCodeMatch = line.match(/^```(\w*)/);
+    if (fencedCodeMatch) {
+      const language = fencedCodeMatch[1] || "";
+      const codeLines = [];
+      i++;
+      while (i < lines.length && !lines[i]!.startsWith("```")) {
+        codeLines.push(lines[i]!);
+        i++;
+      }
+      blocks.push({ type: "fenced-code", value: codeLines.join("\n"), language });
+      i++; // skip closing ```
+      continue;
+    }
+
+    // Blockquote
+    if (line.startsWith("> ")) {
+      const bqLines = [];
+      while (i < lines.length && lines[i]!.startsWith("> ")) {
+        bqLines.push(lines[i]!.substring(2));
+        i++;
+      }
+      blocks.push({ type: "blockquote", children: parseInline(bqLines.join("\n")) });
+      continue;
+    }
+
+    // Unordered List
+    if (/^[-*•]\s+/.test(line)) {
+      const items: MarkdownNode[][] = [];
+      while (i < lines.length && /^[-*•]\s+/.test(lines[i]!)) {
+        items.push(parseInline(lines[i]!.replace(/^[-*•]\s+/, "")));
+        i++;
+      }
+      blocks.push({ type: "list-ul", items });
+      continue;
+    }
+
+    // Ordered List
+    if (/^\d+\.\s+/.test(line)) {
+      const items: MarkdownNode[][] = [];
+      while (i < lines.length && /^\d+\.\s+/.test(lines[i]!)) {
+        items.push(parseInline(lines[i]!.replace(/^\d+\.\s+/, "")));
+        i++;
+      }
+      blocks.push({ type: "list-ol", items });
+      continue;
+    }
+
+    // Paragraph
+    const pLines = [];
+    while (i < lines.length && lines[i]!.trim() !== "" && !isBlockStart(lines[i]!)) {
+      pLines.push(lines[i]!);
+      i++;
+    }
+    if (pLines.length > 0) {
+      blocks.push({ type: "paragraph", children: parseInline(pLines.join("\n")) });
+    } else {
+      i++;
+    }
+  }
+
+  return blocks;
+}
+
+function isBlockStart(line: string) {
+  return (
+    /^---+\s*$/.test(line) ||
+    /^```/.test(line) ||
+    line.startsWith("> ") ||
+    /^[-*•]\s+/.test(line) ||
+    /^\d+\.\s+/.test(line)
+  );
 }

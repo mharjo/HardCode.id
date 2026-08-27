@@ -4,6 +4,7 @@ import { useChat } from "./ChatContext";
 import {
   calculateQuote,
   generateQuoteSummaryText,
+  generatePrintableQuoteHtml,
   QUOTE_CATEGORIES,
   QUOTE_CATEGORY_ORDER,
   QUOTE_COMPLEXITIES,
@@ -52,17 +53,66 @@ export function QuoteEstimator() {
       window.setTimeout(() => setCopied(false), 2000);
     });
   };
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrint = () => {
-    window.print();
+    setIsPrinting(true);
+
+    try {
+      const html = generatePrintableQuoteHtml(calc, locale, t);
+      const iframe = document.createElement("iframe");
+      iframe.style.position = "absolute";
+      iframe.style.width = "0";
+      iframe.style.height = "0";
+      iframe.style.border = "none";
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentWindow?.document;
+      if (!doc) throw new Error("No iframe document");
+
+      doc.open();
+      doc.write(html);
+      doc.close();
+
+      iframe.onload = () => {
+        setTimeout(() => {
+          try {
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+          } catch {
+            fallbackPrint(html);
+          }
+          setTimeout(() => {
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe);
+            }
+            setIsPrinting(false);
+          }, 1000);
+        }, 250);
+      };
+    } catch {
+      const html = generatePrintableQuoteHtml(calc, locale, t);
+      fallbackPrint(html);
+      setIsPrinting(false);
+    }
   };
 
-  const now = new Date();
-  const printDateStr = now.toLocaleDateString(locale === "en" ? "en-US" : "id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const fallbackPrint = (html: string) => {
+    // Attempt fallback to a new tab/window
+    const win = window.open("", "_blank");
+    if (win) {
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+      win.focus();
+      setTimeout(() => {
+        win.print();
+      }, 500);
+    } else {
+      // Use fallback alert if window opening was blocked
+      alert(locale === "en" ? "Failed to open print window. Please allow popups." : "Gagal membuka tab baru. Izinkan popups.");
+    }
+  };
 
   return (
     <div className={styles.quote}>
@@ -201,53 +251,11 @@ export function QuoteEstimator() {
         </div>
       </div>
 
-      {/* Print-only view — shown exclusively via @media print in QuoteEstimator.module.css */}
-      <div className={styles.printArea}>
-        <div className={styles.printHeader}>
-          <div className={styles.printLogo}>{"{"}tanya{"}"} · hardcode.id</div>
-          <div className={styles.printMeta}>{printDateStr}</div>
+      {isPrinting && (
+        <div className={styles.printToast} role="status">
+          {t("quote_toast_printing")}
         </div>
-        <h1 className={styles.printTitle}>{t("quote_print_summary_title")}</h1>
-        <table className={styles.printTable}>
-          <tbody>
-            <tr>
-              <td>{t("quote_type_label")}</td>
-              <td>
-                {calc.cat.icon} {locale === "en" ? calc.cat.nameEn : calc.cat.nameId}
-              </td>
-            </tr>
-            <tr>
-              <td>{t("quote_complexity_label")}</td>
-              <td>{locale === "en" ? calc.comp.labelEn : calc.comp.labelId}</td>
-            </tr>
-            <tr>
-              <td>{t("quote_est_timeline")}</td>
-              <td>{calc.timelineText}</td>
-            </tr>
-            <tr>
-              <td>{t("quote_est_investment")}</td>
-              <td>{calc.priceText}</td>
-            </tr>
-          </tbody>
-        </table>
-        <table className={styles.printTable}>
-          <thead>
-            <tr>
-              <th>{t("quote_features_label")}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {calc.features.map((feat) => (
-              <tr key={feat.id}>
-                <td>{locale === "en" ? feat.nameEn : feat.nameId}</td>
-                <td>{feat.id === "warranty" ? t("quote_included") : `+${feat.extraDays}d`}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p className={styles.printFooter}>{t("quote_print_footer")}</p>
-      </div>
+      )}
     </div>
   );
 }

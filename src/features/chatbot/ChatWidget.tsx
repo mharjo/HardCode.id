@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+﻿import { useEffect, useRef } from "react";
 import { useI18n } from "../../i18n/I18nContext";
 import { ChatConversation } from "./ChatConversation";
-import { ChatProvider, useChat, type ChatSize } from "./ChatContext";
+import { ChatProvider, useChat, type ChatSize, type ChatSizeMode } from "./ChatContext";
 import { ChatGate } from "./ChatGate";
 import { QuoteEstimator } from "./QuoteEstimator";
 import styles from "./ChatWidget.module.css";
@@ -9,14 +9,55 @@ import styles from "./ChatWidget.module.css";
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+const SIZE_CLASSES: Record<ChatSizeMode, string> = {
+  default: "",
+  large: styles.panelLarge ?? "",
+  compact: styles.panelCompact ?? "",
+  custom: styles.panelCustom ?? "",
+};
+
 function ChatWidgetInner() {
   const { t } = useI18n();
-  const { isOpen, mode, size, gatePassed, toggleWidget, closeWidget, switchMode, setSize, isQuoteVisited } = useChat();
+  const { isOpen, mode, size, sizeMode, customW, customH, gatePassed, toggleWidget, closeWidget, switchMode, setSize, isQuoteVisited, hasUnread, setCustomW, setCustomH, setSizeMode } = useChat();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const toggleSize = (target: ChatSize) => {
     setSize((current) => (current === target ? "normal" : target));
+  };
+
+  const startResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = sizeMode === "custom" ? customW : panelRef.current?.offsetWidth || 420;
+    const startH = sizeMode === "custom" ? customH : panelRef.current?.offsetHeight || 500;
+
+    setSizeMode("custom");
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      // Bottom right handle drag: increasing clientX (moving right) makes it expand left?
+      // If we subtract moveEvent from start, dragging left increases width.
+      // But bottom-right handle usually means dragging right increases width.
+      // Let's implement standard drag right = increase width.
+      // Note: for a right-aligned element this might behave weirdly unless we reposition it, but we stick to standard width change.
+      // Actually since it's pinned to the right, to increase its size user has to drag left.
+      // So deltaX = startX - moveEvent.clientX; dragging left increases width.
+      const deltaX = startX - moveEvent.clientX;
+      // deltaY = startY - moveEvent.clientY; dragging up increases height.
+      const deltaY = startY - moveEvent.clientY;
+
+      setCustomW(Math.min(Math.max(startW + deltaX, 320), 900));
+      setCustomH(Math.min(Math.max(startH + deltaY, 360), 800));
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
   };
 
   useEffect(() => {
@@ -71,13 +112,15 @@ function ChatWidgetInner() {
         <span className={styles.triggerIcon} aria-hidden="true">
           {isOpen ? "×" : "{ }"}
         </span>
+        {hasUnread && !isOpen && <span className={styles.launcherBadge} aria-hidden="true" />}
       </button>
 
       {isOpen && (
         <div
           ref={panelRef}
           tabIndex={-1}
-          className={`${styles.panel} ${size === "wide" ? styles.panelWide : ""} ${size === "fullpage" ? styles.panelFullpage : ""}`}
+          className={`${styles.panel} ${SIZE_CLASSES[sizeMode]} ${size === "wide" ? styles.panelWide : ""} ${size === "fullpage" ? styles.panelFullpage : ""}`}
+          style={sizeMode === "custom" && size !== "fullpage" ? { width: customW, height: customH } : undefined}
           role="dialog"
           aria-label={t("bot_dialog_aria")}
         >
@@ -143,6 +186,13 @@ function ChatWidgetInner() {
           <div className={styles.content} id="tanya-tabpanel" role="tabpanel">
             {mode === "chat" ? gatePassed ? <ChatConversation /> : <ChatGate /> : <QuoteEstimator />}
           </div>
+          {size !== "fullpage" && (
+            <div
+              className={styles.resizeHandle}
+              onMouseDown={startResize}
+              aria-hidden="true"
+            />
+          )}
         </div>
       )}
     </>

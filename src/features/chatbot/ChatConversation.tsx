@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "../../i18n/I18nContext";
 import type { BotAction, BotActionType } from "./chatResponses";
-import { parseMarkdownLiteLine } from "./chatResponses";
+import { parseTanyaMessage, type MarkdownNode } from "./chatResponses";
 import { useChat, type ChatMessage } from "./ChatContext";
 import { calculateQuote } from "./quoteConfig";
 import styles from "./ChatConversation.module.css";
@@ -15,17 +15,78 @@ const QUICK_PROMPTS: { promptKey: "bot_prompt1" | "bot_prompt2" | "bot_prompt3" 
   { promptKey: "bot_prompt4", questionKey: "bot_prompt_q4", id: "q4" },
 ];
 
-function renderMessageText(text: string) {
-  const lines = text.split("\n");
-  return lines.map((line, lineIdx) => (
-    <span key={lineIdx} className={styles.line}>
-      {parseMarkdownLiteLine(line).map((seg, segIdx) => {
-        if (seg.type === "bold") return <strong key={segIdx}>{seg.value}</strong>;
-        if (seg.type === "code") return <code key={segIdx}>{seg.value}</code>;
-        return <span key={segIdx}>{seg.value}</span>;
+function MarkdownRenderer({ nodes }: { nodes: MarkdownNode[] }) {
+  return (
+    <>
+      {nodes.map((node, i) => {
+        switch (node.type) {
+          case "text":
+            return <span key={i}>{node.value}</span>;
+          case "bold":
+            return <strong key={i}><MarkdownRenderer nodes={node.children} /></strong>;
+          case "italic":
+            return <em key={i}><MarkdownRenderer nodes={node.children} /></em>;
+          case "code":
+            return <code key={i}>{node.value}</code>;
+          case "emoji":
+            return <span key={i}>{node.value}</span>;
+          case "link":
+            return (
+              <a key={i} href={node.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>
+                <MarkdownRenderer nodes={node.children} />
+              </a>
+            );
+          case "paragraph":
+            return (
+              <div key={i} style={{ marginTop: i > 0 ? "0.5rem" : 0 }}>
+                <MarkdownRenderer nodes={node.children} />
+              </div>
+            );
+          case "blockquote":
+            return (
+              <blockquote key={i} style={{ borderLeft: "3px solid var(--line)", margin: 0, marginTop: i > 0 ? "0.5rem" : 0, paddingLeft: "0.5rem", color: "var(--ink-dim)" }}>
+                <MarkdownRenderer nodes={node.children} />
+              </blockquote>
+            );
+          case "fenced-code":
+            return (
+              <pre key={i} style={{ background: "rgba(0,0,0,0.06)", padding: "0.5rem", borderRadius: "4px", overflowX: "auto", margin: 0, marginTop: i > 0 ? "0.5rem" : 0 }}>
+                <code>{node.value}</code>
+              </pre>
+            );
+          case "list-ul":
+            return (
+              <ul key={i} style={{ margin: 0, marginTop: i > 0 ? "0.5rem" : 0, paddingLeft: "1.2rem", listStyleType: "disc" }}>
+                {node.items.map((item, j) => (
+                  <li key={j} style={{ marginBottom: "0.2rem" }}>
+                    <MarkdownRenderer nodes={item} />
+                  </li>
+                ))}
+              </ul>
+            );
+          case "list-ol":
+            return (
+              <ol key={i} style={{ margin: 0, marginTop: i > 0 ? "0.5rem" : 0, paddingLeft: "1.2rem", listStyleType: "decimal" }}>
+                {node.items.map((item, j) => (
+                  <li key={j} style={{ marginBottom: "0.2rem" }}>
+                    <MarkdownRenderer nodes={item} />
+                  </li>
+                ))}
+              </ol>
+            );
+          case "divider":
+            return <hr key={i} style={{ border: "none", borderTop: "1px solid var(--line-soft)", margin: "0.5rem 0" }} />;
+          default:
+            return null;
+        }
       })}
-    </span>
-  ));
+    </>
+  );
+}
+
+function renderMessageText(text: string) {
+  const nodes = parseTanyaMessage(text);
+  return <MarkdownRenderer nodes={nodes} />;
 }
 
 function actionLabelKey(type: BotActionType): "bot_action_open_quote" | "bot_action_consult" | "bot_action_projects" | "bot_action_learning" {

@@ -187,7 +187,7 @@ Current OUTPUT `package.json` is intentionally leaner than SOURCE:
 
 ## Phased tasks
 
-### Phase 0 — safety/preflight — ✅ COMPLETE
+### Phase 0 — safety/preflight — âœ… COMPLETE
 
 - [x] Treat SOURCE as read-only.
 - [x] Verify OUTPUT folder status before scaffold.
@@ -199,7 +199,7 @@ Current OUTPUT `package.json` is intentionally leaner than SOURCE:
 
 Acceptance criteria: SOURCE untouched; OUTPUT scaffold buildable.
 
-### Phase 1 — scaffold production Vite — ✅ COMPLETE (2026-08-20)
+### Phase 1 — scaffold production Vite — âœ… COMPLETE (2026-08-20)
 
 - [x] Create clean React + Vite + TypeScript project in OUTPUT.
 - [x] Add ESLint/TypeScript strict config.
@@ -214,7 +214,7 @@ typecheck`, `npm run test`, `npm run build` all pass with zero errors on a
 placeholder Home/404 app. **Full detail preserved in "Phase 1 scaffold
 completion log" below.**
 
-### Phase 2 — extract content/data — ⬜ NOT STARTED
+### Phase 2 — extract content/data — â¬œ NOT STARTED
 
 - [ ] Add Tailwind v4 (`tailwindcss`, `@tailwindcss/vite`) to OUTPUT and wire
       into `vite.config.ts` + `src/styles/globals.css`.
@@ -248,7 +248,7 @@ Acceptance criteria: `npm run typecheck` passes with the new data modules;
 a checklist diff confirms all 330 translation keys and all 6 articles (every
 field) are represented in the new TS data; no SOURCE file was modified.
 
-### Phase 3 — rebuild UI as React components — ✅ COMPLETE (2026-08-21)
+### Phase 3 — rebuild UI as React components — âœ… COMPLETE (2026-08-21)
 
 - [x] `AppShell` layout: `Header` (nav, language toggle, theme toggle),
       `Footer`.
@@ -287,7 +287,7 @@ section shows no missing copy, no broken interactive elements (accordion,
 carousel, calendar day/slot selection, chat send, quote calculation); `npm
 run build` produces a working `dist/` served via `npm run preview`.
 
-### Phase 4 — production hardening — ✅ COMPLETE (8/9, Lighthouse deferred) (2026-08-21)
+### Phase 4 — production hardening — âœ… COMPLETE (8/9, Lighthouse deferred) (2026-08-21)
 
 - [x] SEO metadata per route (`<title>`, meta description, canonical URL,
       Open Graph/Twitter card tags) via a `SeoHead` component. Done 2026-08-21.
@@ -320,13 +320,13 @@ run build` produces a working `dist/` served via `npm run preview`.
       90 tests passed, build 441.70 kB (gzip 142.63 kB), all 6 routes + sitemap
       + robots return 200 on preview.
 - [ ] Lighthouse pass (performance/accessibility/best-practices/SEO) run
-      against `npm run preview`, target ≥90 on each category. Deferred —
+      against `npm run preview`, target â‰¥90 on each category. Deferred —
       requires manual browser Lighthouse run. All other Phase 4 items complete.
 
 Acceptance criteria: all checkboxes above ticked with evidence (command
 output or Lighthouse scores) recorded in this file's log section.
 
-### Phase 5 — Cloudflare Pages deploy prep — ⬜ NOT STARTED
+### Phase 5 — Cloudflare Pages deploy prep — â¬œ NOT STARTED
 
 - [ ] Cloudflare Pages project connected to the OUTPUT repo (requires this
       directory to become a git repo with a remote — currently it has no
@@ -440,7 +440,7 @@ the production branch, real secrets, custom domain attached).
 
 **Not required as a blanket pass.** Direct inspection of `index.html`,
 `src/i18n.js`, and `src/articles.js` in SOURCE found no mojibake — confirmed
-clean UTF-8, no `â€`/`Ã©`-style byte corruption, no replacement characters.
+clean UTF-8, no `Ã¢â‚¬`/`ÃƒÂ©`-style byte corruption, no replacement characters.
 This supersedes the earlier draft of this plan, which incorrectly flagged
 mojibake as a risk before SOURCE was directly inspected. Still worth a spot-
 check during Phase 2 extraction (copy-paste across tools can introduce
@@ -939,7 +939,7 @@ left out.
   `/artikel?tag=...`), a mailto-based CTA box (same placeholder pattern the
   homepage step used for links to not-yet-built routes), 2 related articles,
   a reading-progress bar tied to scroll position, and a share/copy-link
-  button (header + footer) with a `navigator.clipboard` → legacy
+  button (header + footer) with a `navigator.clipboard` â†’ legacy
   `execCommand("copy")` fallback chain. Unknown slugs render a localized
   "not found" state (not the generic `NotFound` 404 page, so the messaging
   stays article-specific) rather than a route-level 404.
@@ -949,7 +949,7 @@ left out.
 - **SEO metadata**: `useDocumentMeta` (new hook) applies a per-route
   title/description/canonical/OG/Twitter set on mount, keyed to the route's
   actual content, and restores the localized homepage default on unmount —
-  so navigating `/artikel/:slug` → `/` leaves `document.head` correct
+  so navigating `/artikel/:slug` â†’ `/` leaves `document.head` correct
   without the next page needing to know about the previous one. Mirrors
   SOURCE's `updateDocumentMetaForArticle` + `resetDocumentMeta` pairing.
 - **Homepage integration**: `ArticlesPreviewSection`'s 3 preview cards now
@@ -1033,7 +1033,7 @@ left out.
   can exist yet. Building a redirect for a URL pattern nothing has ever
   linked to would be speculative. If SOURCE's hash links do turn out to have
   been shared somewhere before this migration, add a small
-  `useEffect` in `App`/`HomePage` that redirects `#tulisan-{id}` → `/artikel/{id}`
+  `useEffect` in `App`/`HomePage` that redirects `#tulisan-{id}` â†’ `/artikel/{id}`
   on mount — noted here rather than built blind.
 - **Word count is computed at render time** (`countWords`, stripped-HTML
   regex tokenizer) rather than stored as data, unlike SOURCE which also
@@ -1042,7 +1042,7 @@ left out.
   function reading `getAppLanguage()`.
 - **No toast notifications** for "copied to clipboard" — SOURCE showed a
   floating toast (`showToast`) in addition to the button's own label swap.
-  This migration keeps only the inline button-label swap (`Copy` →
+  This migration keeps only the inline button-label swap (`Copy` â†’
   `Copied!`) with `aria-live="polite"` on the share button's label, since a
   toast is a second, redundant announcement of the same event and adds a
   global DOM node/animation system for no accessibility gain the inline
@@ -1084,7 +1084,7 @@ public/_redirects
   "tulisan" now routes to `/artikel`; the other 4 items route to `/#<hash>`.
 - `src/features/home/HomePage.tsx` — added a mount/`location.hash`-keyed
   effect that scrolls to the target section, so cross-route anchor nav
-  (`/artikel` → `/#layanan`) still works.
+  (`/artikel` â†’ `/#layanan`) still works.
 - `src/app/App.tsx` — registered `/artikel` and `/artikel/:slug` routes.
 - `src/app/App.test.tsx` — added coverage for both new routes plus the
   unknown-slug not-found state.
@@ -1197,7 +1197,7 @@ was extracted into a new typed data module and rebuilt as three components:
   decisions"), `titleKey`/`bodyParagraphKeys` referencing the existing
   bilingual `learn_c{1-7}_title`/`_p1`/`_p2`/`_p3` translation keys, literal
   `tags` (technical terms, language-agnostic), the module's ASCII art
-  (entity-decoded, e.g. module 2's `&lt;` → `<`), and `searchTerms` ported
+  (entity-decoded, e.g. module 2's `&lt;` â†’ `<`), and `searchTerms` ported
   from SOURCE's `data-search` attributes. `learningStages` groups modules
   into the 4-stage tree exactly as SOURCE ordered them (stage 3 renders
   module 6 before module 5, matching SOURCE's grid order). `learningTrackTabs`
@@ -1213,7 +1213,7 @@ was extracted into a new typed data module and rebuilt as three components:
   same pattern as `/artikel`'s category tabs), a stats row, and the 4-stage
   tree — each stage a heading + level badge + a grid of module nodes
   (number pill, track badge, title, summary, tags, prerequisite/relation
-  line, "Lihat Silabus →" action). Each node is a real `<a href="#learn-card-N">`
+  line, "Lihat Silabus â†’" action). Each node is a real `<a href="#learn-card-N">`
   (keyboard- and screen-reader-navigable, not a bare `onClick` div like
   SOURCE's `onclick="scrollToLearnCard(...)"`), which `preventDefault`s and
   smooth-scrolls + focuses the matching detail card below — mirrors
@@ -1240,7 +1240,7 @@ was extracted into a new typed data module and rebuilt as three components:
   field (`ServicesSection` renders a `<Link>` when `linkTo` is set, `mailto:`
   otherwise — `srv1`/`srv2` still `mailto:` since `/konsultasi`/`/proyek`
   don't exist yet). `srv3_action` copy was restored to SOURCE's original
-  "Lihat 7 detail materi →" / "View 7 syllabus modules →" (the homepage
+  "Lihat 7 detail materi â†’" / "View 7 syllabus modules â†’" (the homepage
   phase had substituted "email to get started" text as an honest label for
   the mailto-only placeholder; now that the real destination exists, the
   original SOURCE copy is accurate again).
@@ -1266,7 +1266,7 @@ was extracted into a new typed data module and rebuilt as three components:
   the site to English left these three strings in Indonesian. Since the
   task requires "typed bilingual ID/EN data" for every module, EN copy was
   authored for these three fields during migration (e.g. "Prerequisite:
-  Nol" → "Prerequisite: None", "Hubungan: Lanjutan M2" → "Builds on:
+  Nol" â†’ "Prerequisite: None", "Hubungan: Lanjutan M2" â†’ "Builds on:
   Extension of M2"). This is a content-completeness fix, not a parity
   break — the ID text is byte-identical to SOURCE.
 - **Module number label ("MODUL 01") made locale-aware.** Same root cause
@@ -1410,7 +1410,7 @@ was extracted into typed data and rebuilt as two components:
   a reset action — same search/empty-state/reset shape as the other routes.
   SEO metadata applied via the existing useDocumentMeta hook.
 - **Navigation integration**: Header gained a /proyek nav Link (new
-  
+
 av_proyek key). The srv2 service card on the homepage (previously a
   mailto: placeholder pointing nowhere, per prior phases' pattern) now
   links to the real /proyek route via the existing ServicesSection
@@ -1430,9 +1430,9 @@ av_proyek key). The srv2 service card on the homepage (previously a
 - **Service card linkTo integration**: srv2 in src/data/services.ts
   already had a linkTo field (set to "/proyek"), so ServicesSection
   now renders a <Link> for that card instead of the mailto: fallback.
-  This completes the service-card → real-route chain across all 3 service
-  cards (srv1 → /konsultasi [pending], srv2 → /proyek [done],
-  srv3 → /belajar [done]).
+  This completes the service-card â†’ real-route chain across all 3 service
+  cards (srv1 â†’ /konsultasi [pending], srv2 â†’ /proyek [done],
+  srv3 â†’ /belajar [done]).
 
 #### Deliberate scope cuts
 
@@ -1453,7 +1453,7 @@ src/features/projects/ProjectsPage.tsx (+ .module.css)
 
 #### Files changed
 
-- src/data/translations.ts — added 
+- src/data/translations.ts — added
 av_proyek, seo_proyek_title/
   seo_proyek_desc, proj_back_link, proj_main_title/_desc,
   proj_search_ph/_clear_aria, proj_empty_title/proj_empty,
@@ -1602,7 +1602,7 @@ src/features/consultation/
 #### Files changed
 
 - src/data/translations.ts — added ~90 new bilingual ID/EN keys:
-  
+
 av_konsultasi, seo_konsultasi_title/_desc, cal_months (12),
   cal_days_short (7), all cal_* UI keys (back link, main title/desc,
   mentor info, perks, schedule rule, form labels/hints/placeholders/errors,
@@ -1611,7 +1611,7 @@ av_konsultasi, seo_konsultasi_title/_desc, cal_months (12),
   i18n.js; this phase verified complete coverage and added the
   UI-chrome keys (cal_months, cal_days_short, seo_konsultasi_*).
 - src/data/services.ts — srv1.linkTo set to "/konsultasi" (was
-  previously 
+  previously
 ull/mailto: placeholder).
 - src/components/layout/Header.tsx — added a /konsultasi nav Link.
 - src/features/home/ServicesSection.tsx — srv1 action link now renders
@@ -1697,8 +1697,8 @@ ormal | wide | fullpage), and open/closed state. No
 
 - **src/features/chatbot/ChatGate.tsx** (+ .module.css): gate state
   — description, contact/email input (not required), 4 quick topic chips
-  (ole="group" with ria-label), "Mulai Ngobrol →" submit button.
-  Submits → sets gatePassed: true, shows chat state.
+  (ole="group" with ria-label), "Mulai Ngobrol â†’" submit button.
+  Submits â†’ sets gatePassed: true, shows chat state.
 
 - **src/features/chatbot/ChatConversation.tsx** (+ .module.css):
   chat state — quote banner (shown if quote was configured, dismissible),
@@ -1716,8 +1716,8 @@ ormal | wide | fullpage), and open/closed state. No
   tests): pure pricing data (8 categories × 4 complexities × 7 features)
   ported verbatim from SOURCE QUOTE_CATEGORIES/QUOTE_COMPLEXITIES/
   QUOTE_FEATURES, plus calculateQuote() implementing SOURCE's exact
-  formula: days = baseDays + dayMod + Σ(extraDays), price = (baseIdr *
-  mult) + Σ(extraIdr). Also ormatIdr(num) and ormatUsd(num).
+  formula: days = baseDays + dayMod + Î£(extraDays), price = (baseIdr *
+  mult) + Î£(extraIdr). Also ormatIdr(num) and ormatUsd(num).
 
 - **src/features/chatbot/chatResponses.ts** (+ chatResponses.test.ts, 14
   tests): pure getBotResponse(question: string): string — keyword matching
@@ -1928,5 +1928,111 @@ src/components/layout/AppShell.tsx        (skip-to-main-content link)
 #### Deferred
 
 - Lighthouse pass (requires manual browser run with Chrome DevTools or
-  
+
 px lighthouse-cli). All other Phase 4 items complete.
+## Final chatbot parity completion log (2026-08-27)
+
+Scope completed in the target output repository `D:\AISTUDIO\OUTPUT\HardCode.id` only. The source repository `D:\AISTUDIO\SOURCE\react-hardcode-id` remained read-only and was not edited.
+
+### Chat widget parity
+
+- Added Tanya unread state in `src/features/chatbot/ChatContext.tsx`.
+- Bot replies received while the widget is closed now set `hasUnread`.
+- Opening the widget via `openWidget` or `toggleWidget` clears unread state.
+- `src/features/chatbot/ChatWidget.tsx` renders a launcher red dot when unread messages exist.
+- Added accessible unread copy via `tanya_unread` translations in ID and EN.
+- Added desktop bottom-right resize handle with custom width/height persistence.
+- Chat size persistence uses localStorage keys:
+  - `hardcode_tanya_size_mode`
+  - `hardcode_tanya_custom_w`
+  - `hardcode_tanya_custom_h`
+- Resize clamps dimensions and preserves the mobile full-screen panel behavior.
+
+### Tanya message rendering parity
+
+- Added `parseTanyaMessage` in `src/features/chatbot/chatResponses.ts`.
+- `src/features/chatbot/ChatConversation.tsx` now renders parsed Tanya markdown nodes without `dangerouslySetInnerHTML`.
+- Parser coverage includes emoji shortcodes/emoticons, dividers, blockquotes, fenced code, inline code, links, unordered/ordered lists, bold, and italic.
+- Regression tests were updated in `src/features/chatbot/chatResponses.test.ts`.
+
+### Quote estimator print parity
+
+- Added `generatePrintableQuoteHtml` in `src/features/chatbot/quoteConfig.ts`.
+- `src/features/chatbot/QuoteEstimator.tsx` now prints through a hidden iframe with a fallback print window.
+- Added translated printing/fallback toast copy in `src/data/translations.ts`.
+- Removed obsolete inline print-area CSS and added toast styling in `src/features/chatbot/QuoteEstimator.module.css`.
+
+### Cleanup
+
+- Removed stray generated `src/README.md` placeholder artifact.
+- Fixed whitespace and encoding regressions introduced during agent edits.
+- `public/sitemap.xml` was regenerated by the build prebuild step.
+
+### Navbar parity
+
+- SOURCE's `<nav>` (index.html around line 6028) only ever rendered 5 links —
+  `layanan`, `cara-kerja`, `faq`, `testimoni`, `tulisan` — plus the language
+  and theme toggles. It never linked `belajar`, `proyek`, or `konsultasi`
+  from the header; those routes are reached only via in-page CTAs/cards.
+- `src/components/layout/Header.tsx` previously also rendered `Link`s to
+  `/belajar`, `/proyek`, `/konsultasi`, which SOURCE does not do. Removed
+  those three links so the header nav matches SOURCE exactly (5 items:
+  layanan/cara-kerja/faq/testimoni/tulisan, via the existing
+  `ANCHOR_NAV_LINKS` array plus the `/artikel` link), followed by language
+  and theme toggles.
+- No translation keys were removed — `nav_belajar`/`nav_proyek`/
+  `nav_konsultasi` stay defined in `src/data/translations.ts` since other UI
+  (footer/cards) may still reference them; only the header's rendering of
+  them changed.
+
+### Back-to-top parity
+
+- SOURCE (`index.html`) renders a floating `#back-to-top` button
+  (`.back-to-top-btn`, around line 7438) fixed at `bottom: 5.75rem; right:
+  1.5rem`, `aria-label`/`title` bound to the `top_aria` i18n key, that
+  becomes `.visible` once `window.scrollY > 260` (`checkScrollPosition`,
+  around line 8644) and calls `window.scrollTo({ top: 0, behavior: "smooth"
+  })` on click (`scrollToTop`, around line 8657).
+- Added `src/components/ui/BackToTop.tsx` (+ `BackToTop.module.css`) as a
+  global component: tracks `window.scrollY` via a passive scroll listener,
+  shows/hides past the same 260px threshold, and smooth-scrolls to top on
+  click. Rendered once from `src/components/layout/AppShell.tsx` (inside the
+  shared `container`, after `Footer`), so it's present on every route
+  without each page needing to mount it individually.
+- Styling ports SOURCE's fixed position, size, border/background, hover/
+  active transforms, and opacity/visibility/transform transition curve
+  (`cubic-bezier(0.16, 1, 0.3, 1)`), using this repo's CSS custom properties
+  (`--paper-raised`, `--ink`, `--ink-dim`, `--line`) instead of SOURCE's
+  literal color values, so it themes correctly in light/dark mode. Fixed at
+  `bottom: 92px; right: 24px` (SOURCE's `5.75rem`/`1.5rem`) with `z-index:
+  9990` — deliberately below the chat trigger/panel's `9999`/`9998` (see
+  `src/features/chatbot/ChatWidget.module.css`) so the two floating
+  UI elements never fight for top stacking if they ever visually overlap.
+- Added `top_aria` to both locales in `src/data/translations.ts` ("Kembali
+  ke atas" / "Back to top"), matching SOURCE's `src/i18n.js` `top_aria` key
+  verbatim.
+- No temporary/scratch files existed in the tree for this step (checked via
+  `git status --porcelain=v1 --untracked-files=all` before starting); none
+  needed removal.
+
+### Validation (this step, 2026-08-27)
+
+```text
+git diff --check   -> clean (autocrlf LF/CRLF notices only, no real issues)
+npm run lint       -> 0 errors, 3 warnings (pre-existing
+                      react-refresh/only-export-components on
+                      ChatContext.tsx, I18nContext.tsx, ThemeContext.tsx)
+npm run typecheck  -> clean (tsc --noEmit)
+npm run test       -> 9 files, 91 tests passed
+npm run build      -> prebuild sitemap (11 URLs) + vite build succeeded:
+                      dist/index.html                   1.59 kB (gzip 0.69 kB)
+                      dist/assets/index-*.css           70.39 kB (gzip 12.60 kB)
+                      dist/assets/index-*.js            448.97 kB (gzip 145.52 kB)
+```
+
+`dist/` was removed after the build check since it is a build artifact
+(already `.gitignore`d), not something to keep on disk between steps.
+
+This closes out the navbar and back-to-top parity gaps left open at the end
+of the "Final chatbot parity completion log" above; no other open items were
+in scope for this step.

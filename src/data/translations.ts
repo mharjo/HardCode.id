@@ -19,6 +19,7 @@ const id = {
   skip_to_content: "Langsung ke konten utama",
   theme_toggle_aria: "Ganti mode gelap/terang",
   lang_toggle_aria: "Ganti Bahasa / Switch Language",
+  top_aria: "Kembali ke atas",
 
   hero_pill: "terbuka untuk klien baru",
   hero_title_main: "HardCode.",
@@ -513,6 +514,7 @@ const id = {
   quote_toast_applied: "Estimasi berhasil diterapkan ke form booking 1-on-1!",
   quote_toast_reset: "Pilihan estimasi telah di-reset.",
   quote_toast_sent: "Estimasi dikirim ke obrolan chat.",
+  quote_toast_print_fallback: "Membuka tab baru untuk mencetak...",
   quote_active_badge: "📊 Sesi Quote Aktif",
   quote_banner_view: "Lihat & Ubah",
   quote_banner_dismiss_aria: "Sembunyikan banner quote",
@@ -535,6 +537,7 @@ const en: Record<keyof typeof id, string> = {
   skip_to_content: "Skip to main content",
   theme_toggle_aria: "Toggle dark mode",
   lang_toggle_aria: "Ganti Bahasa / Switch Language",
+  top_aria: "Back to top",
 
   hero_pill: "open for new clients",
   hero_title_main: "HardCode.",
@@ -1027,6 +1030,7 @@ const en: Record<keyof typeof id, string> = {
   quote_toast_applied: "Quote estimate copied into consultation form!",
   quote_toast_reset: "Quote configuration reset.",
   quote_toast_sent: "Quote sent to the chat stream.",
+  quote_toast_print_fallback: "Opening a new tab to print...",
   quote_active_badge: "📊 Active Quote Session",
   quote_banner_view: "View & Edit",
   quote_banner_dismiss_aria: "Dismiss quote banner",
