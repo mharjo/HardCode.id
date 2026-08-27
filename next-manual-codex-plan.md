@@ -1,7 +1,7 @@
 # Next Manual Codex Execution Plan — HardCode.id
 
-Status: implementation complete and pushed to `main` at commit `7e9ab38`.
-Execution mode: manual via Codex. Do not deploy automatically unless explicitly approved.
+Status: Phase A through G COMPLETE, validated, committed and pushed to `origin/main` at commit `ca87d92`. GitHub Actions CI passing (`33057177012`).
+Execution mode: manual via Codex / Antigravity. Ready for Phase H (Cloudflare Pages Preview Deployment).
 
 Repository:
 
@@ -26,25 +26,21 @@ D:\AISTUDIO\SOURCE\react-hardcode-id
 
 ## Current completed baseline
 
-Already completed and pushed:
+Already completed, verified with browser automation, committed, and pushed:
 
 ```text
-commit 7e9ab38 Complete chatbot and navigation parity
+commit ca87d92 feat: complete Phase A-G QA parity (navbar, back-to-top, chatbot, quote estimator, CI workflow)
 ```
 
-Implemented:
+Verified & Implemented:
 
-- Chat unread dot.
-- Chat clear-unread-on-open behavior.
-- Chat resize handle.
-- Chat custom size persistence and clamping.
-- `parseTanyaMessage` and React-safe chat rendering.
-- Quote print via hidden iframe with fallback print window.
-- Quote printing toast and translation keys.
-- Navbar restored to SOURCE parity.
-- Global Back-to-top button.
-- `top_aria` ID/EN translations.
-- Migration log updates.
+- Phase A: 5 routes preview, direct reload, language/theme toggle & persistence, navbar 5-item parity.
+- Phase B: Global Back-to-top button, dynamic translations, non-overlap with chatbot on desktop & mobile.
+- Phase C: Chatbot Tanya gate flow, quick prompts, bot replies, unread badge dot, desktop resize handle & localStorage persistence, mobile full-screen panel, AST markdown renderer with 0 dangerouslySetInnerHTML, zero mojibake.
+- Phase D: Quote estimator category & 4-tier complexity selection, feature toggles, calculated price/timeline matching Vitest suite, copy brief summary, hidden iframe print with fallback print window, printing toast, ID/EN localized labels.
+- Phase E: Full repository validation passing with 0 lint errors, 0 type errors, 91 unit tests passing, clean build with 11-URL sitemap generator, 0 mojibake, SOURCE untouched.
+- Phase F: Automated Quality / Lighthouse audit passing with Performance: 97/100, Accessibility: 100/100, Best Practices: 100/100, SEO: 100/100.
+- Phase G: GitHub Actions CI workflow created (`.github/workflows/ci.yml`) and verified live on GitHub (Run ID `33057177012` - SUCCESS).
 
 Last known validation passed:
 
