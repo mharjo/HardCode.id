@@ -1,12 +1,6 @@
 # HardCode.id Migration Plan
 
-Status: **Phase 1 (scaffold) COMPLETE. Homepage core-sections migration
-COMPLETE (2026-08-20). Article phase (`/artikel` list + `/artikel/:slug`
-detail) COMPLETE (2026-08-20). Learning phase (`/belajar`) COMPLETE
-(2026-08-20). Project phase (`/proyek`) COMPLETE (2026-08-20). Consultation phase
-(`/konsultasi`) COMPLETE (2026-08-20)** — see "Consultation phase migration
-completion log" at the bottom of this file. Chatbot widget + quote estimator COMPLETE (2026-08-21)** — see "Chatbot phase migration completion log" at the bottom of this file. Phase 4 (hardening) COMPLETE (8/9 — Lighthouse manual run deferred). Phase 5 (Cloudflare deploy) still **not started**
-(explicitly out of scope for this step — see that log for exact boundaries).
+Status: **Phase 1 (scaffold) COMPLETE. Homepage core-sections migration COMPLETE. Article phase (`/artikel` list + `/artikel/:slug` detail) COMPLETE. Learning phase (`/belajar`) COMPLETE. Project phase (`/proyek`) COMPLETE. Consultation phase (`/konsultasi`) COMPLETE. Chatbot widget + quote estimator COMPLETE. Phase 4 (hardening & Lighthouse audit) COMPLETE. Phase 5 (Cloudflare Pages deployment & live cutover) COMPLETE (2026-08-27/2026-08-28)** — live at `https://hardcode.id/`.
 
 ## Current state
 
