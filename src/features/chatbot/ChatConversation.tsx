@@ -15,6 +15,20 @@ const QUICK_PROMPTS: { promptKey: "bot_prompt1" | "bot_prompt2" | "bot_prompt3" 
   { promptKey: "bot_prompt4", questionKey: "bot_prompt_q4", id: "q4" },
 ];
 
+function sanitizeUrl(url: string): string {
+  const trimmed = url.trim().toLowerCase();
+  if (
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("mailto:") ||
+    trimmed.startsWith("/") ||
+    trimmed.startsWith("#")
+  ) {
+    return url;
+  }
+  return "#";
+}
+
 function MarkdownRenderer({ nodes }: { nodes: MarkdownNode[] }) {
   return (
     <>
@@ -32,7 +46,13 @@ function MarkdownRenderer({ nodes }: { nodes: MarkdownNode[] }) {
             return <span key={i}>{node.value}</span>;
           case "link":
             return (
-              <a key={i} href={node.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>
+              <a
+                key={i}
+                href={sanitizeUrl(node.url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "inherit", textDecoration: "underline" }}
+              >
                 <MarkdownRenderer nodes={node.children} />
               </a>
             );
